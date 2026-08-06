@@ -1,0 +1,44 @@
+[general]
+character_name = "Kuni"
+owner_name = "papik"
+owner_chat_id = 0            # твой Telegram user id (число)
+
+[telegram]
+api_id = 0                   # my.telegram.org
+api_hash = ""
+phone_number = ""            # номер аккаунта, который будет ботом
+tdjson_path = "./tdlib/libtdjson.so"
+
+# --- LLM ---------------------------------------------------------------
+[llm]
+# "ollama" — локальная модель на CPU, бесплатно, медленнее
+# "api"    — облачный OpenAI-совместимый эндпоинт (DeepSeek и т.п.), платно, быстрее
+llm_backend = "ollama"
+context_token_trigger = 20000   # после скольки токенов контекста — дамп в дневник и "сон"
+
+[llm.ollama]
+host = "http://localhost:11434"
+model = "qwen3.5:9b"
+embedding_model = "qwen3-embedding"
+
+[llm.api]
+base_url = "https://api.deepseek.com/v1"
+api_key = ""
+model = "deepseek-chat"
+# для эмбеддингов в режиме api дневник всё равно может использовать ollama
+# (эмбеддинги маленькие и дешёвые по CPU, смысла гонять их в облако нет)
+embedding_host = "http://localhost:11434"
+embedding_model = "qwen3-embedding"
+
+# --- Память --------------------------------------------------------------
+[memory]
+diary_db_path = "./data/diary.db"
+working_memory_path = "./data/working_memory.md"
+top_k_recall = 6                # сколько записей дневника подмешивать в контекст
+consolidate_hour = 4            # в котором часу ночи запускать "сон"/консолидацию
+consolidate_max_minutes = 30    # максимум времени на консолидацию за одну ночь
+
+# --- TTS -------------------------------------------------------------------
+[tts]
+enabled = true
+voice_model_path = "./tts/voices/ru_RU-irina-medium.onnx"
