@@ -28,13 +28,14 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export TZ=Asia/Omsk
             
-            # Устанавливаем часовой пояс перед apt
+            # Устанавливаем часовой пояс
             ln -fs /usr/share/zoneinfo/Asia/Omsk /etc/localtime
             
             apt-get update
             apt-get install -y --no-install-recommends \
               build-essential cmake git zlib1g-dev \
-              libssl-dev gperf php-cli ninja-build tzdata
+              libssl-dev gperf php-cli ninja-build tzdata \
+              ca-certificates
             
             # Настраиваем tzdata
             dpkg-reconfigure -f noninteractive tzdata
