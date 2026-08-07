@@ -1,0 +1,48 @@
+name: Build TDLib for ARM64
+
+on:
+  workflow_dispatch:  # ручной запуск
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake git zlib1g-dev \
+          libssl-dev gperf php-cli ninja-build \
+          gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+    
+    - name: Clone TDLib
+      run: |
+        git clone https://github.com/tdlib/td.git
+        cd td
+        git checkout master
+    
+    - name: Build TDLib for ARM64
+      run: |
+        cd td
+        mkdir -p build && cd build
+        
+        cmake -DCMAKE_BUILD_TYPE=Release \
+              -DTD_ENABLE_LTO=OFF \
+              -DCMAKE_SYSTEM_NAME=Linux \
+              -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+              -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+              -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+              -GNinja \
+              ..
+        
+        cmake --build . --target tdjson
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libtdjson-arm64
+        path: td/build/libtdjson.so*
+        retention-days: 30
