@@ -9,6 +9,13 @@ api_hash = ""
 phone_number = ""            # номер аккаунта, который будет ботом
 tdjson_path = "./tdlib/libtdjson.so"
 
+# --- Прокси для обхода блокировок Telegram в РФ -----------------------
+[telegram.proxy]
+enabled = false              # включить прокси (true/false)
+host = ""                    # хост MTProto прокси (например: "proxy.example.com")
+port = 443                   # порт прокси
+secret = ""                  # MTProto secret (dd-xxxx...), получается у @MTProxybot
+
 # --- LLM ---------------------------------------------------------------
 [llm]
 # "ollama" — локальная модель на CPU, бесплатно, медленнее
