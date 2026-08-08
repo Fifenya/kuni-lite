@@ -14,11 +14,11 @@ jobs:
     - name: Setup QEMU
       uses: docker/setup-qemu-action@v3
     
-    - name: Build TDLib in ARM64 container (Ubuntu 20.04)
+    - name: Build TDLib in ARM64 container (Ubuntu 24.04)
       run: |
         docker run --rm --platform linux/arm64 \
           -v ${{ github.workspace }}:/workspace \
-          arm64v8/ubuntu:20.04 bash -c "
+          arm64v8/ubuntu:24.04 bash -c "
             set -e
             export DEBIAN_FRONTEND=noninteractive
             export TZ=Asia/Omsk
@@ -36,7 +36,8 @@ jobs:
             cd /workspace
             git clone https://github.com/tdlib/td.git
             cd td
-            git checkout master
+            # Стабильная версия, совместимая с aiotdlib 0.27.x
+            git checkout v1.8.31
             
             mkdir -p build && cd build
             cmake -DCMAKE_BUILD_TYPE=Release \
@@ -54,7 +55,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: libtdjson-arm64
+        name: libtdjson-arm64-stable
         path: |
           libtdjson.so*
         retention-days: 30
