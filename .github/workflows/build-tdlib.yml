@@ -14,21 +14,15 @@ jobs:
     - name: Setup QEMU
       uses: docker/setup-qemu-action@v3
     
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    
-    - name: Build TDLib in ARM64 container
+    - name: Build TDLib in ARM64 container (Ubuntu 20.04)
       run: |
         docker run --rm --platform linux/arm64 \
           -v ${{ github.workspace }}:/workspace \
-          ubuntu:22.04 bash -c "
+          arm64v8/ubuntu:20.04 bash -c "
             set -e
-            
-            # Отключаем интерактивный режим
             export DEBIAN_FRONTEND=noninteractive
             export TZ=Asia/Omsk
             
-            # Устанавливаем часовой пояс
             ln -fs /usr/share/zoneinfo/Asia/Omsk /etc/localtime
             
             apt-get update
@@ -37,7 +31,6 @@ jobs:
               libssl-dev gperf php-cli ninja-build tzdata \
               ca-certificates
             
-            # Настраиваем tzdata
             dpkg-reconfigure -f noninteractive tzdata
             
             cd /workspace
